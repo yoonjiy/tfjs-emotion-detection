@@ -116,7 +116,6 @@ function count_result(predicted, emotion){
 function get_result(emotion){
 	let result_index = emotion.reduce((imax, x, i, arr) => x > arr[imax] ? i : imax, 0);
 	let result = label[result_index];
-	console.log(result);
 	window.parent.postMessage({message: result}, "*");
 }
 
