@@ -34,7 +34,10 @@ function enableCam() {
 		video.srcObject = stream;
 		instruction.style.display = "none";
 		document.getElementById("cam_chart_main").style.left = 0;
-		video.addEventListener('loadeddata', predictWebcam());
+		setTimeout(function(){
+			video.addEventListener('loadeddata', predictWebcam());
+		}, 21000);
+
 		cameraaccess = true;
 	}).catch(errorCallback)
 }
@@ -51,9 +54,8 @@ if (getUserMediaSupported()) {
 		model_emotion = loadedModel;
 	});
 
-	setTimeout(function(){
-		enableCam();
-	}, 21000);
+	enableCam();
+
 } else {
 	console.warn('getUserMedia() is not supported by your browser');
 	instructionText	.innerHTML = "getUserMedia() is not supported by your browser"
