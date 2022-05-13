@@ -34,11 +34,13 @@ function enableCam() {
 		video.srcObject = stream;
 		instruction.style.display = "none";
 		document.getElementById("cam_chart_main").style.left = 0;
-		setTimeout(function(){
+
+		setTimeout(function () {
 			video.addEventListener('loadeddata', predictWebcam());
 		}, 21000);
 
 		cameraaccess = true;
+
 	}).catch(errorCallback)
 }
 
@@ -52,14 +54,16 @@ if (getUserMediaSupported()) {
 	});
 	tf.loadLayersModel('model/model.json', false).then(function (loadedModel) {
 		model_emotion = loadedModel;
+
 	});
 
 	enableCam();
 
 } else {
 	console.warn('getUserMedia() is not supported by your browser');
-	instructionText	.innerHTML = "getUserMedia() is not supported by your browser"
+	instructionText.innerHTML = "getUserMedia() is not supported by your browser"
 }
+
 
 
 function predictWebcam() {
@@ -84,10 +88,6 @@ function predictWebcam() {
 
 			count_result(predictedValue, emotion);
 
-			if(count>=10){
-				get_result(emotion);
-			}
-
 			document.getElementById("angry").style.width = 100*predictedValue['0'][0]+"%";
 			document.getElementById("disgust").style.width = 100*predictedValue['0'][1]+"%";
 			document.getElementById("fear").style.width = 100*predictedValue['0'][2]+"%";
@@ -108,6 +108,7 @@ function predictWebcam() {
 
 function count_result(predicted, emotion){
 	//predicted 값이 1이면 해당 index의 emotion 증가
+	count++;
 	let idx = 0;
 	for (let value of predicted['0']){
 		if(value===1){
@@ -124,11 +125,11 @@ function get_result(emotion){
 }
 
 let count_time = setInterval(function () {
-	count++;
 	if(count > 10){
 		get_result(emotion);
 		clearInterval(count_time);
 		count = 0;
 	}}, 1000);
+
 
 
