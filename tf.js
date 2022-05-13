@@ -51,7 +51,9 @@ if (getUserMediaSupported()) {
 		model_emotion = loadedModel;
 	});
 
-	enableCam();
+	setTimeout(function(){
+		enableCam();
+	}, 21000);
 } else {
 	console.warn('getUserMedia() is not supported by your browser');
 	instructionText	.innerHTML = "getUserMedia() is not supported by your browser"
