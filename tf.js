@@ -26,7 +26,7 @@ function enableCam() {
 	control = true;
 	const constraints = {
 	  audio: false,
-	  video: { width: 640, height: 480 },
+	  video: { width: 440, height: 330 },
 	};
 
 	// Activate the webcam stream.
