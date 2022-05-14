@@ -1,7 +1,6 @@
 const video = document.getElementById('webcam');
 const instruction = document.getElementById('caminstruct');
 const liveView = document.getElementById('liveView');
-const enableWebcamButton = document.getElementById('webcamButton');
 const instructionText = document.getElementById("camiText");
 const webcam_canvas = document.getElementById('webcam_canvas');
 const cam_ctx = webcam_canvas.getContext('2d');
@@ -33,7 +32,7 @@ function enableCam() {
 	navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
 		video.srcObject = stream;
 		instruction.style.display = "none";
-		document.getElementById("cam_chart_main").style.left = 0;
+		// document.getElementById("cam_chart_main").style.left = 0;
 
 		setTimeout(function () {
 			video.addEventListener('loadeddata', predictWebcam());
@@ -88,13 +87,13 @@ function predictWebcam() {
 
 			count_result(predictedValue, emotion);
 
-			document.getElementById("angry").style.width = 100*predictedValue['0'][0]+"%";
-			document.getElementById("disgust").style.width = 100*predictedValue['0'][1]+"%";
-			document.getElementById("fear").style.width = 100*predictedValue['0'][2]+"%";
-			document.getElementById("happy").style.width = 100*predictedValue['0'][3]+"%";
-			document.getElementById("sad").style.width = 100*predictedValue['0'][4]+"%";
-			document.getElementById("surprise").style.width = 100*predictedValue['0'][5]+"%";
-			document.getElementById("neutral").style.width = 100*predictedValue['0'][6]+"%";
+			// document.getElementById("angry").style.width = 100*predictedValue['0'][0]+"%";
+			// document.getElementById("disgust").style.width = 100*predictedValue['0'][1]+"%";
+			// document.getElementById("fear").style.width = 100*predictedValue['0'][2]+"%";
+			// document.getElementById("happy").style.width = 100*predictedValue['0'][3]+"%";
+			// document.getElementById("sad").style.width = 100*predictedValue['0'][4]+"%";
+			// document.getElementById("surprise").style.width = 100*predictedValue['0'][5]+"%";
+			// document.getElementById("neutral").style.width = 100*predictedValue['0'][6]+"%";
 
 		}
 
@@ -121,6 +120,7 @@ function count_result(predicted, emotion){
 function get_result(emotion){
 	let result_index = emotion.reduce((imax, x, i, arr) => x > arr[imax] ? i : imax, 0);
 	let result = label[result_index];
+	console.log(result);
 	window.parent.postMessage({message: result}, "*");
 }
 
