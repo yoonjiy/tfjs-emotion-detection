@@ -19,8 +19,6 @@ let errorCallback = function(error) {
 
 };
 
-// Function to handle enableWebcamButton click.
-// Takes video feed and the call predictWebcam function.
 function enableCam() {
 	control = true;
 	const constraints = {
@@ -32,11 +30,9 @@ function enableCam() {
 	navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
 		video.srcObject = stream;
 		instruction.style.display = "none";
-		// document.getElementById("cam_chart_main").style.left = 0;
+		document.getElementById("cam_chart_main").style.left = 0;
 
-		setTimeout(function () {
-			video.addEventListener('loadeddata', predictWebcam());
-		}, 21000);
+		video.addEventListener('loadeddata', predictWebcam());
 
 		cameraaccess = true;
 
@@ -51,7 +47,18 @@ if (getUserMediaSupported()) {
 	blazeface.load().then(function (loadedModel) {
 		model = loadedModel;
 	});
-	tf.loadLayersModel('model/model.json', false).then(function (loadedModel) {
+
+	class L2 {
+		static className = 'L2';
+
+		constructor(config) {
+			return tf.regularizers.l1l2(config)
+		}
+	}
+
+	tf.serialization.registerClass(L2);
+
+	tf.loadLayersModel('model2/model.json', false).then(function (loadedModel) {
 		model_emotion = loadedModel;
 
 	});
@@ -87,13 +94,13 @@ function predictWebcam() {
 
 			count_result(predictedValue, emotion);
 
-			// document.getElementById("angry").style.width = 100*predictedValue['0'][0]+"%";
-			// document.getElementById("disgust").style.width = 100*predictedValue['0'][1]+"%";
-			// document.getElementById("fear").style.width = 100*predictedValue['0'][2]+"%";
-			// document.getElementById("happy").style.width = 100*predictedValue['0'][3]+"%";
-			// document.getElementById("sad").style.width = 100*predictedValue['0'][4]+"%";
-			// document.getElementById("surprise").style.width = 100*predictedValue['0'][5]+"%";
-			// document.getElementById("neutral").style.width = 100*predictedValue['0'][6]+"%";
+			document.getElementById("angry").style.width = 100*predictedValue['0'][0]+"%";
+			document.getElementById("disgust").style.width = 100*predictedValue['0'][1]+"%";
+			document.getElementById("fear").style.width = 100*predictedValue['0'][2]+"%";
+			document.getElementById("happy").style.width = 100*predictedValue['0'][3]+"%";
+			document.getElementById("sad").style.width = 100*predictedValue['0'][4]+"%";
+			document.getElementById("surprise").style.width = 100*predictedValue['0'][5]+"%";
+			document.getElementById("neutral").style.width = 100*predictedValue['0'][6]+"%";
 
 		}
 
@@ -105,19 +112,17 @@ function predictWebcam() {
 	});
 }
 
-function count_result(predicted, emotion){
-	//predicted 값이 1이면 해당 index의 emotion 증가
+function count_result(predicted, emotion) {
 	count++;
-	let idx = 0;
-	for (let value of predicted['0']){
-		if(value===1){
-			emotion[idx]++;
-		}
-		idx++;
+	let max = 0
+	for(let i=1; i<7; i++){
+		if(predicted['0'][i] > predicted['0'][max])
+			max = i
 	}
+	emotion[max]++
 }
 
-function get_result(emotion){
+function get_result(emotion) {
 	let result_index = emotion.reduce((imax, x, i, arr) => x > arr[imax] ? i : imax, 0);
 	let result = label[result_index];
 	console.log(result);
@@ -125,11 +130,12 @@ function get_result(emotion){
 }
 
 let count_time = setInterval(function () {
-	if(count > 10){
+	if (count > 15) {
 		get_result(emotion);
 		clearInterval(count_time);
 		count = 0;
-	}}, 1000);
+	}
+	}, 1000);
 
 
 
